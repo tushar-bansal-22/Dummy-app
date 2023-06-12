@@ -13,4 +13,9 @@ class CartProvider extends ChangeNotifier{
     notifyListeners();
     return cartData;
   }
+
+  Future<void> addToCart(ProductModel product) async {
+    await CartRepository() . addProductToCart(product.toCartJson());
+    getCart();
+  }
 }
