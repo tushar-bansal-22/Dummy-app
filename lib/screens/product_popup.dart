@@ -1,33 +1,33 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+import 'package:untitled/main.dart';
 import 'package:untitled/models/productModel.dart';
 import 'package:untitled/providers/product_provider.dart';
 import 'package:untitled/screens/dashboard.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductPopup extends StatefulWidget {
+class ProductPopup extends ConsumerStatefulWidget {
   BuildContext cntxt ;
   ProductPopup(this.cntxt);
   @override
-  State<ProductPopup> createState() => _ProductPopupState();
+  ConsumerState<ProductPopup> createState() => _ProductPopupState();
 }
 
-class _ProductPopupState extends State<ProductPopup> {
+class _ProductPopupState extends ConsumerState<ProductPopup> {
   TextEditingController productName = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController image = TextEditingController();
   TextEditingController productId = TextEditingController();
 
-  Future<void> addProduct() async{
+  Future<void> addProduct(ProductProvider productProvider) async{
     var url=Uri.http('10.0.2.2:8080','/products');
     ProductModel product = ProductModel(int.parse(productId.text), productName.text, description.text, image.text);
     var res = await http.post(url,
         body:product.toJson());
     var decodedResponse = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
     if(decodedResponse['success']==true) {
-      Provider.of<ProductProvider>(widget.cntxt,listen: false).changedProducts();
+      productProvider.changedProducts();
       Navigator.pop(context);
       // Navigator.pop(context);
     };
@@ -35,6 +35,7 @@ class _ProductPopupState extends State<ProductPopup> {
 
   @override
   Widget build(BuildContext context) {
+    final product = ref.watch(productProvider);
     return Padding(
       padding:
         EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -92,7 +93,7 @@ class _ProductPopupState extends State<ProductPopup> {
                 Expanded(
                     child: Container(
                       padding: EdgeInsets.all(10),
-                        child: ElevatedButton(onPressed: (){addProduct();}, child: Text('Add Product'),style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 15,horizontal: 5),backgroundColor: Colors.pinkAccent,foregroundColor: Colors.white),))),
+                        child: ElevatedButton(onPressed: (){addProduct(product);}, child: Text('Add Product'),style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 15,horizontal: 5),backgroundColor: Colors.pinkAccent,foregroundColor: Colors.white),))),
               ],
             )
           ],

@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+import 'package:untitled/main.dart';
 import 'package:untitled/providers/cart_provider.dart';
 import 'package:untitled/providers/product_provider.dart';
 import 'package:untitled/repository/cart_repository.dart';
@@ -14,14 +15,14 @@ import 'package:badges/badges.dart' as badges;
 import '../models/productModel.dart';
 import '../providers/user.dart';
 
-class Dashboard extends StatefulWidget {
+class Dashboard extends ConsumerStatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  ConsumerState<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends ConsumerState<Dashboard> {
   Future<List<dynamic>> _fetchingData() async {
     var res = await http.get(Uri.http('10.0.2.2:8080', '/products'));
     var decodedResponse = jsonDecode(res.body);
@@ -29,16 +30,16 @@ class _DashboardState extends State<Dashboard> {
     return decodedResponse["products"];
   }
 
-  Future<void> addToCart(ProductModel product, BuildContext context) async {
-    Provider.of<CartProvider>(context,listen: false).addToCart(product);
+  Future<void> addToCart(ProductModel product, CartProvider cart) async {
+    cart.addToCart(product);
+    // Provider.of<CartProvider>(context,listen: false).addToCart(product);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<User>(builder: (context, user, _) {
-      return ChangeNotifierProvider(
-          create: (context) => CartProvider()..getCart(),
-          builder: (context, widget) {
+    final user = ref.watch(userProvider).user;
+    final cart = ref.watch(cartProvider) ..getCart();
+    final products = ref.watch(productProvider) ..getProducts();
             return SafeArea(
         child: Scaffold(
           appBar: AppBar(
@@ -47,8 +48,7 @@ class _DashboardState extends State<Dashboard> {
             title: Text('Products', style: GoogleFonts.poppins()),
             actions: [
               Container(
-                child:  Consumer<CartProvider>(builder: (context, cart, _) {
-                      return badges.Badge(
+                child:   badges.Badge(
                         showBadge: true,
                         position: badges.BadgePosition.bottomStart(
                             bottom: 0, start: -5),
@@ -74,18 +74,13 @@ class _DashboardState extends State<Dashboard> {
                               size: 35,
                               weight: 2,
                             )),
-                      );
-                    }
-                  ,
-                ),
+                      )
+
               )
             ],
 
           ),
-          body: ChangeNotifierProvider(
-            create: (context) => ProductProvider()..getProducts(),
-            builder: (context, widget) {
-              return Column(
+          body:  Column(
                 children: [
                   Expanded(
                       flex: 2,
@@ -106,7 +101,7 @@ class _DashboardState extends State<Dashboard> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Hey ${user.user.email}!',
+                                    'Hey ${user.email}!',
                                     style: GoogleFonts.abel(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w900,
@@ -142,14 +137,12 @@ class _DashboardState extends State<Dashboard> {
                               )))),
                   Expanded(
                     flex: 16,
-                    child: Consumer<ProductProvider>(
-                        builder: (context, productProvider, _) {
-                      if (!productProvider.isLoading) {
-                        return ListView.builder(
-                            itemCount: productProvider.products.length,
+                    child: (!products.isLoading) ?
+                         ListView.builder(
+                            itemCount: products.products.length,
                             itemBuilder: (BuildContext context, int index) {
                               ProductModel product =
-                                  productProvider.products[index];
+                                  products.products[index];
                               return Card(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)),
@@ -194,7 +187,7 @@ class _DashboardState extends State<Dashboard> {
                                                           100)),
                                               child: IconButton(
                                                 onPressed: () {
-                                                  addToCart(product,context);
+                                                  addToCart(product,cart);
                                                 },
                                                 icon: Icon(
                                                   Icons
@@ -208,18 +201,16 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                 ),
                               );
-                            });
-                      } else {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                    }),
+                            })
+                      : Center(child: CircularProgressIndicator())
+
+
                   ),
                 ],
-              );
-            },
-          ),
+              ),
+
         ),
-      );});
-    });
+      );
+
   }
 }

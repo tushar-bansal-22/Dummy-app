@@ -3,20 +3,22 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:untitled/main.dart';
 import 'package:untitled/screens/dashboard.dart';
-
 import '../models/userModel.dart';
 import '../providers/user.dart';
 
-class Login extends StatefulWidget {
+class Login extends ConsumerStatefulWidget {
   const Login({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  ConsumerState<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+
+
+class _LoginState extends ConsumerState<Login> {
   bool isLoading=false;
   @override
   Widget build(BuildContext context) {
@@ -60,10 +62,9 @@ class _LoginState extends State<Login> {
                       setState(() {
                         isLoading=true;
                       });
-                    Provider.of<User>(context, listen: false).login(
-                  context,
-                    UserModel(email.text,
-                    password.text));
+                      final userprovider = ref.watch(userProvider);
+                      userprovider.login(context, UserModel(email.text, password.text));
+
                   }, child: Text('Login')),
 
                 ),
