@@ -8,8 +8,8 @@ import 'package:untitled/providers/product_provider.dart';
 import 'package:untitled/screens/dashboard.dart';
 
 class ProductPopup extends StatefulWidget {
-  BuildContext cntxt ;
-  ProductPopup(this.cntxt);
+  final void Function(String,String,String,String) addNewProduct;
+  ProductPopup(this.addNewProduct);
   @override
   State<ProductPopup> createState() => _ProductPopupState();
 }
@@ -21,17 +21,11 @@ class _ProductPopupState extends State<ProductPopup> {
   TextEditingController productId = TextEditingController();
 
   Future<void> addProduct() async{
-    var url=Uri.http('10.0.2.2:8080','/products');
-    ProductModel product = ProductModel(int.parse(productId.text), productName.text, description.text, image.text);
-    var res = await http.post(url,
-        body:product.toJson());
-    var decodedResponse = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
-    if(decodedResponse['success']==true) {
-      Provider.of<ProductProvider>(widget.cntxt,listen: false).changedProducts();
+      widget.addNewProduct(productId.text,productName.text,description.text,image.text);
       Navigator.pop(context);
       // Navigator.pop(context);
-    };
-  }
+    }
+
 
   @override
   Widget build(BuildContext context) {

@@ -22,11 +22,9 @@ class _CartState extends State<Cart> {
     //   var decodedResponse = jsonDecode(res.body);
     //   return (decodedResponse['cartItems']);
     // }
+    final cartProvider = context.read<CartProvider>();
 
-    return ChangeNotifierProvider(
-      create: (context)=>CartProvider()..getCart(),
-      builder: (context,widget){
-        final cartProvider = context.read<CartProvider>();
+
         return Scaffold(
           appBar: AppBar(leading: IconButton(icon: Icon(Icons.arrow_back,color: Colors.purple.shade200,),onPressed: (){
             Navigator.pop(context);
@@ -76,7 +74,6 @@ class _CartState extends State<Cart> {
               },
             ),
         );
-      },
-    );
+
   }
 }

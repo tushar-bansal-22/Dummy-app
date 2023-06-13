@@ -29,16 +29,27 @@ class _DashboardState extends State<Dashboard> {
     return decodedResponse["products"];
   }
 
-  Future<void> addToCart(ProductModel product, BuildContext context) async {
+  Future<void> addToCart(ProductModel product) async {
     Provider.of<CartProvider>(context,listen: false).addToCart(product);
   }
+
+  Future<void> addNewProduct(String productId,String productName, String description, String image)async {
+    var url = Uri.http('10.0.2.2:8080', '/products');
+    ProductModel product = ProductModel(
+        int.parse(productId), productName, description, image);
+    var res = await http.post(url,
+        body: product.toJson());
+    var decodedResponse = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
+    if (decodedResponse['success'] == true) {
+      Provider.of<ProductProvider>(context, listen: false).changedProducts();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Consumer<User>(builder: (context, user, _) {
-      return ChangeNotifierProvider(
-          create: (context) => CartProvider()..getCart(),
-          builder: (context, widget) {
+
             return SafeArea(
         child: Scaffold(
           appBar: AppBar(
@@ -82,10 +93,7 @@ class _DashboardState extends State<Dashboard> {
             ],
 
           ),
-          body: ChangeNotifierProvider(
-            create: (context) => ProductProvider()..getProducts(),
-            builder: (context, widget) {
-              return Column(
+          body: Column(
                 children: [
                   Expanded(
                       flex: 2,
@@ -132,7 +140,7 @@ class _DashboardState extends State<Dashboard> {
                                                                   30))),
                                               context: context,
                                               builder: (builder) {
-                                                return ProductPopup(context);
+                                                return ProductPopup(addNewProduct);
                                               });
                                         },
                                         icon: Icon(Icons.add),
@@ -194,7 +202,7 @@ class _DashboardState extends State<Dashboard> {
                                                           100)),
                                               child: IconButton(
                                                 onPressed: () {
-                                                  addToCart(product,context);
+                                                  addToCart(product);
                                                 },
                                                 icon: Icon(
                                                   Icons
@@ -215,11 +223,11 @@ class _DashboardState extends State<Dashboard> {
                     }),
                   ),
                 ],
-              );
-            },
-          ),
+              )
+
+
         ),
-      );});
+      );
     });
   }
 }
