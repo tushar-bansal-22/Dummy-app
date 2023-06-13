@@ -1,8 +1,6 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:untitled/models/productModel.dart';
 import 'package:untitled/providers/cart_provider.dart';
@@ -22,7 +20,6 @@ class _CartState extends State<Cart> {
     //   var decodedResponse = jsonDecode(res.body);
     //   return (decodedResponse['cartItems']);
     // }
-    final cartProvider = context.read<CartProvider>();
 
 
         return Scaffold(
@@ -34,12 +31,12 @@ class _CartState extends State<Cart> {
               builder: (context,cartProvider,_){
                 if (!cartProvider.isLoading) {
 
-                  if(cartProvider.cartData.length==0){
+                  if(cartProvider.cartData.isEmpty){
                     return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Icons.remove_shopping_cart_outlined, color: Colors.pinkAccent,size: 200.0,),
+                            const Icon(Icons.remove_shopping_cart_outlined, color: Colors.pinkAccent,size: 200.0,),
                             Text('Cart empty',style: GoogleFonts.poppins(fontWeight: FontWeight.w700,fontSize: 24),),
                           ],
                         ));
@@ -50,13 +47,13 @@ class _CartState extends State<Cart> {
                         itemBuilder: (BuildContext context, int index) {
                           ProductModel product = cartProvider.cartData[index];
                           return Card(
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 5),
                             elevation: 10,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14)),
                             child: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 20),
                               child: ListTile(
                                 leading: Image.network(product.image),
@@ -69,7 +66,7 @@ class _CartState extends State<Cart> {
                         });
                   }
                 } else {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
               },
             ),

@@ -14,8 +14,8 @@ class User extends ChangeNotifier{
         body:user.toJson());
     var decodedResponse = jsonDecode(res.body) as Map;
     if(decodedResponse['success']==true){
-      Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context)=>Dashboard()),(Route<dynamic> route) => false);
-    };
+      Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context)=>const Dashboard()),(Route<dynamic> route) => false);
+    }
 
     // notifyListeners();
   }

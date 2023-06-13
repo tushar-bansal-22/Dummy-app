@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:untitled/providers/cart_provider.dart';
 import 'package:untitled/providers/product_provider.dart';
-import 'package:untitled/repository/cart_repository.dart';
 import 'package:untitled/screens/cart.dart';
 import 'package:untitled/screens/product_popup.dart';
 import 'package:badges/badges.dart' as badges;
@@ -22,12 +21,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  Future<List<dynamic>> _fetchingData() async {
-    var res = await http.get(Uri.http('10.0.2.2:8080', '/products'));
-    var decodedResponse = jsonDecode(res.body);
-    print(decodedResponse['products'][0]);
-    return decodedResponse["products"];
-  }
+
 
   Future<void> addToCart(ProductModel product) async {
     Provider.of<CartProvider>(context,listen: false).addToCart(product);
@@ -57,38 +51,36 @@ class _DashboardState extends State<Dashboard> {
             foregroundColor: Colors.purple.shade200,
             title: Text('Products', style: GoogleFonts.poppins()),
             actions: [
-              Container(
-                child:  Consumer<CartProvider>(builder: (context, cart, _) {
-                      return badges.Badge(
-                        showBadge: true,
-                        position: badges.BadgePosition.bottomStart(
-                            bottom: 0, start: -5),
-                        badgeContent: Card(
-                          color: Colors.red,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100)),
-                          child: Text(
-                           ' ${cart.cartData.length}',
-                            style: GoogleFonts.poppins(color: Colors.white),
-                          ),
+              Consumer<CartProvider>(builder: (context, cart, _) {
+                    return badges.Badge(
+                      showBadge: true,
+                      position: badges.BadgePosition.bottomStart(
+                          bottom: 0, start: -5),
+                      badgeContent: Card(
+                        color: Colors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100)),
+                        child: Text(
+                         ' ${cart.cartData.length}',
+                          style: GoogleFonts.poppins(color: Colors.white),
                         ),
-                        child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Cart()));
-                            },
-                            icon: Icon(
-                              Icons.shopping_cart_outlined,
-                              color: Colors.purple.shade200,
-                              size: 35,
-                              weight: 2,
-                            )),
-                      );
-                    }
-                  ,
-                ),
+                      ),
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Cart()));
+                          },
+                          icon: Icon(
+                            Icons.shopping_cart_outlined,
+                            color: Colors.purple.shade200,
+                            size: 35,
+                            weight: 2,
+                          )),
+                    );
+                  }
+                ,
               )
             ],
 
@@ -98,7 +90,7 @@ class _DashboardState extends State<Dashboard> {
                   Expanded(
                       flex: 2,
                       child: Card(
-                          margin: EdgeInsets.symmetric(
+                          margin: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 15),
                           elevation: 10,
                           shape: RoundedRectangleBorder(
@@ -106,7 +98,7 @@ class _DashboardState extends State<Dashboard> {
                           color: Colors.pinkAccent,
                           child: Container(
                               width: double.infinity,
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 10, horizontal: 20),
                               child: Row(
                                 mainAxisAlignment:
@@ -129,7 +121,7 @@ class _DashboardState extends State<Dashboard> {
                                         onPressed: () {
                                           showModalBottomSheet(
                                               isScrollControlled: true,
-                                              shape: RoundedRectangleBorder(
+                                              shape: const RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.only(
                                                           topLeft:
@@ -143,7 +135,7 @@ class _DashboardState extends State<Dashboard> {
                                                 return ProductPopup(addNewProduct);
                                               });
                                         },
-                                        icon: Icon(Icons.add),
+                                        icon: const Icon(Icons.add),
                                         color: Colors.pinkAccent,
                                       ))
                                 ],
@@ -161,11 +153,11 @@ class _DashboardState extends State<Dashboard> {
                               return Card(
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30)),
-                                margin: EdgeInsets.symmetric(
+                                margin: const EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 10),
                                 elevation: 10,
                                 child: Container(
-                                  margin: EdgeInsets.symmetric(
+                                  margin: const EdgeInsets.symmetric(
                                       vertical: 20, horizontal: 30),
                                   child: Column(
                                     children: [
@@ -204,7 +196,7 @@ class _DashboardState extends State<Dashboard> {
                                                 onPressed: () {
                                                   addToCart(product);
                                                 },
-                                                icon: Icon(
+                                                icon: const Icon(
                                                   Icons
                                                       .add_shopping_cart_outlined,
                                                   color: Colors.white,
@@ -218,7 +210,7 @@ class _DashboardState extends State<Dashboard> {
                               );
                             });
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return const Center(child: CircularProgressIndicator());
                       }
                     }),
                   ),

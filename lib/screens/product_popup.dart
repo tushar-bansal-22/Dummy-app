@@ -1,15 +1,9 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-import 'package:untitled/models/productModel.dart';
-import 'package:untitled/providers/product_provider.dart';
-import 'package:untitled/screens/dashboard.dart';
 
 class ProductPopup extends StatefulWidget {
   final void Function(String,String,String,String) addNewProduct;
-  ProductPopup(this.addNewProduct);
+  const ProductPopup(this.addNewProduct, {super.key});
   @override
   State<ProductPopup> createState() => _ProductPopupState();
 }
@@ -33,8 +27,8 @@ class _ProductPopupState extends State<ProductPopup> {
       padding:
         EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-        decoration: BoxDecoration(
+        padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(topLeft:Radius.circular(30), topRight: Radius.circular(30) )
         ),
         child: Column(
@@ -44,9 +38,9 @@ class _ProductPopupState extends State<ProductPopup> {
 
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
                 child: TextFormField(
-                  decoration: InputDecoration(hintText:'Product ID',border: InputBorder.none ),
+                  decoration: const InputDecoration(hintText:'Product ID',border: InputBorder.none ),
                   keyboardType: TextInputType.number,
                   controller: productId,
                 ),
@@ -55,18 +49,18 @@ class _ProductPopupState extends State<ProductPopup> {
             Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
 
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
                 child: TextFormField(
-                  decoration: InputDecoration(hintText:'Product Name',border: InputBorder.none ),
+                  decoration: const InputDecoration(hintText:'Product Name',border: InputBorder.none ),
                   controller: productName,
                 ),
               ),
             ),
             Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
                 child: TextFormField(
-                  decoration: InputDecoration(hintText:'Image URL',border: InputBorder.none ),
+                  decoration: const InputDecoration(hintText:'Image URL',border: InputBorder.none ),
                   controller: image,
                 ),
               ),
@@ -74,9 +68,9 @@ class _ProductPopupState extends State<ProductPopup> {
             Card(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10,vertical: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 15),
                 child: TextFormField(
-                  decoration: InputDecoration(hintText:'Description',border: InputBorder.none ),
+                  decoration: const InputDecoration(hintText:'Description',border: InputBorder.none ),
                   controller: description,
                 ),
               ),
@@ -85,8 +79,8 @@ class _ProductPopupState extends State<ProductPopup> {
               children: [
                 Expanded(
                     child: Container(
-                      padding: EdgeInsets.all(10),
-                        child: ElevatedButton(onPressed: (){addProduct();}, child: Text('Add Product'),style: ElevatedButton.styleFrom(padding: EdgeInsets.symmetric(vertical: 15,horizontal: 5),backgroundColor: Colors.pinkAccent,foregroundColor: Colors.white),))),
+                      padding: const EdgeInsets.all(10),
+                        child: ElevatedButton(onPressed: (){addProduct();},style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 5),backgroundColor: Colors.pinkAccent,foregroundColor: Colors.white), child: const Text('Add Product'),))),
               ],
             )
           ],

@@ -18,7 +18,7 @@ class CartRepository{
   }
 
   Future<void> addProductToCart(String product) async{
-    var res = await http.post(Uri.http('10.0.2.2:8080', '/cart'),
+    await http.post(Uri.http('10.0.2.2:8080', '/cart'),
         body: product);
   }
 }
