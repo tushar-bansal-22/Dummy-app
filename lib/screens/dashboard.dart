@@ -72,7 +72,6 @@ class _DashboardState extends ConsumerState<Dashboard> {
                               Icons.shopping_cart_outlined,
                               color: Colors.purple.shade200,
                               size: 35,
-                              weight: 2,
                             )),
                       )
 
